@@ -1,0 +1,115 @@
+## Managing File System Permissions from the Command Line
+
+### Objectives
+After completing this section, you should be able to change the permissions and ownership of files using command-line tools.
+
+### Changing File and Directory Permissions
+
+The `chmod` command is used to change file and directory permissions. Permissions can be specified using either the symbolic method or the numeric method.
+
+#### Changing Permissions with the Symbolic Method
+
+```bash
+chmod WhoWhatWhich file|directory
+```
+- **Who**: `u` (user), `g` (group), `o` (other), `a` (all)
+- **What**: `+` (add), `-` (remove), `=` (set exactly)
+- **Which**: `r` (read), `w` (write), `x` (execute)
+
+The symbolic method uses letters to represent user categories and permissions. The operation can add, remove, or set permissions exactly.
+
+##### Examples:
+- **Remove read and write permission for group and other on `file1`:**
+  ```bash
+  chmod go-rw file1
+  ```
+- **Add execute permission for everyone on `file2`:**
+  ```bash
+  chmod a+x file2
+  ```
+
+##### Recursive Permission Change:
+- The `-R` option applies changes recursively:
+  ```bash
+  chmod -R g+rwX demodir
+  ```
+  This command sets read and write permissions for the group on `demodir` and its contents, adding execute permission only to directories and files that already have execute set for user, group, or other.
+
+#### Changing Permissions with the Numeric Method
+
+```bash
+chmod ### file|directory
+```
+Each digit in the numeric method represents permissions for the user, group, and others, calculated as follows:
+- **Read**: 4
+- **Write**: 2
+- **Execute**: 1
+
+##### Example:
+- **Set read and write permissions for user, read permission for group and other on `samplefile`:**
+  ```bash
+  chmod 644 samplefile
+  ```
+
+- **Set read, write, and execute permissions for user, read and execute permissions for group, and no permission for others on `sampledir`:**
+  ```bash
+  chmod 750 sampledir
+  ```
+
+### Changing File and Directory User or Group Ownership
+
+File ownership can be changed using the `chown` command.
+
+#### Changing User Ownership
+
+```bash
+chown user file|directory
+```
+- **Example:**
+  ```bash
+  chown student test_file
+  ```
+
+#### Changing Group Ownership
+
+```bash
+chown :group file|directory
+```
+- **Example:**
+  ```bash
+  chown :admins test_dir
+  ```
+
+#### Changing Both User and Group Ownership
+
+```bash
+chown user:group file|directory
+```
+- **Example:**
+  ```bash
+  chown visitor:guests test_dir
+  ```
+
+#### Recursive Ownership Change
+
+- The `-R` option changes ownership recursively:
+  ```bash
+  chown -R student test_dir
+  ```
+
+### Important Notes
+
+- Always use a colon (`:`) to separate user and group in `chown` commands. Do not use a period (`.`), as it can cause confusion due to periods being valid characters in usernames.
+  - **Correct:**
+    ```bash
+    chown owner:group filename
+    ```
+  - **Incorrect:**
+    ```bash
+    chown owner.group filename
+    ```
+
+### References
+- `ls(1)`, `chmod(1)`, `chown(1)`, and `chgrp(1)` man pages
+
+This guide covers the essential commands and methods for managing file system permissions and ownership from the command line in Linux.  

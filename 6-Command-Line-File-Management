@@ -1,0 +1,86 @@
+## Managing Files Using Command-line Tools
+
+### Objectives
+After completing this section, you should be able to:
+- Create, copy, move, and remove files and directories.
+
+### Command-line File Management
+To manage files, you need to be able to create, remove, copy, and move them. You also need to organize them logically into directories, which you also need to be able to create, remove, copy, and move.
+
+#### Common File Management Commands
+
+| Activity                    | Command Syntax                       |
+|-----------------------------|--------------------------------------|
+| Create a directory          | `mkdir directory`                    |
+| Copy a file                 | `cp file new-file`                   |
+| Copy a directory and its contents | `cp -r directory new-directory` |
+| Move or rename a file or directory | `mv file new-file`             |
+| Remove a file               | `rm file`                            |
+| Remove a directory containing files | `rm -r directory`             |
+| Remove an empty directory   | `rmdir directory`                    |
+
+### Creating Directories
+The `mkdir` command creates one or more directories or subdirectories. It takes as arguments a list of paths to the directories you want to create.
+
+- The `mkdir` command will fail with an error if the directory already exists, or if you are trying to create a subdirectory in a directory that does not exist.
+- The `-p` (parent) option creates missing parent directories for the requested destination.
+
+Example:
+```bash
+[user@host ~]$ mkdir Videos/Watched
+[user@host ~]$ ls -R Videos
+Videos/:
+blockbuster1.ogg blockbuster2.ogg Watched
+```
+
+### Copying Files
+The `cp` command copies a file, creating a new file either in the current directory or in a specified directory. It can also copy multiple files to a directory.
+
+- Warning: If the destination file already exists, the `cp` command overwrites the file.
+
+Example:
+```bash
+[user@host ~]$ cd Videos
+[user@host Videos]$ cp blockbuster1.ogg blockbuster3.ogg
+[user@host Videos]$ ls -l
+total 0
+-rw-rw-r--. 1 user user 0 Feb 8 16:23 blockbuster1.ogg
+-rw-rw-r--. 1 user user 0 Feb 8 16:24 blockbuster2.ogg
+-rw-rw-r--. 1 user user 0 Feb 8 16:34 blockbuster3.ogg
+drwxrwxr-x. 2 user user 4096 Feb 8 16:05 Watched
+```
+
+### Moving Files
+The `mv` command moves files from one location to another. If you think of the absolute path to a file as its full name, moving a file is effectively the same as renaming a file. File contents remain unchanged.
+
+Example:
+```bash
+[user@host Documents]$ mv thesis_chapter2.odf thesis_chapter2_reviewed.odf
+```
+
+### Removing Files and Directories
+The `rm` command removes files. By default, `rm` will not remove directories that contain files, unless you add the `-r` or `--recursive` option.
+
+- Important: There is no command-line undelete feature, nor a "trash bin" from which you can restore files staged for deletion.
+
+Example:
+```bash
+[user@host Documents]$ rm thesis_chapter2_reviewed.odf
+```
+
+Use the `rm -r` command to remove a subdirectory and its contents:
+```bash
+[user@host Documents]$ rm -r Thesis/Chapter1
+```
+
+Use the `rmdir` command to remove an empty directory:
+```bash
+[user@host Documents]$ rmdir ProjectY
+```
+
+### References
+- `cp(1)`
+- `mkdir(1)`
+- `mv(1)`
+- `rm(1)`
+- `rmdir(1)` man pages

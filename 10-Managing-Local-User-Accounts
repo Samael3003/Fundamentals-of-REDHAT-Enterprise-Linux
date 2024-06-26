@@ -1,0 +1,125 @@
+## Managing Local User Accounts
+
+### Objectives
+
+After completing this section, you should be able to:
+- Create, modify, and delete local user accounts.
+
+### Creating Users from the Command Line
+
+- **Create a New User:**
+  ```bash
+  useradd username
+  ```
+  - Sets up the user’s home directory and account information.
+  - Creates a private group for the user named `username`.
+  - Initially, the account does not have a valid password and cannot log in until a password is set.
+
+- **Display Options:**
+  ```bash
+  useradd --help
+  ```
+  - Displays basic options to override defaults.
+  - The same options can often be used with the `usermod` command to modify an existing user.
+
+- **Defaults:**
+  - Read from `/etc/login.defs`.
+  - Include valid UID range and default password aging rules.
+  - Changes to this file do not affect existing users, only new users.
+
+### Modifying Existing Users from the Command Line
+
+- **Display Options:**
+  ```bash
+  usermod --help
+  ```
+  - Displays options to modify an account.
+
+- **Common Options:**
+  ```bash
+  usermod [options] username
+  ```
+  - `-c, --comment COMMENT`: Add the user's real name to the comment field.
+  - `-g, --gid GROUP`: Specify the primary group for the user account.
+  - `-G, --groups GROUPS`: Specify a comma-separated list of supplementary groups.
+  - `-a, --append`: Used with the `-G` option to add supplementary groups without replacing the existing set.
+  - `-d, --home HOME_DIR`: Specify a particular home directory.
+  - `-m, --move-home`: Move the user's home directory to a new location (must be used with the `-d` option).
+  - `-s, --shell SHELL`: Specify a particular login shell.
+  - `-L, --lock`: Lock the user account.
+  - `-U, --unlock`: Unlock the user account.
+
+### Deleting Users from the Command Line
+
+- **Remove User:**
+  ```bash
+  userdel username
+  ```
+  - Removes the user from `/etc/passwd` but leaves the user’s home directory intact.
+
+- **Remove User and Home Directory:**
+  ```bash
+  userdel -r username
+  ```
+  - Removes the user from `/etc/passwd` and deletes the user’s home directory.
+
+**Warning:**
+- Without the `-r` option, files owned by an unassigned UID may remain, leading to security issues.
+- Unassigned files can occur if a file exists outside the user’s home directory.
+
+**Example Scenario:**
+```bash
+[root@host ~]# useradd user01
+[root@host ~]# ls -l /home
+drwx------. 3 user01 user01 74 Feb 4 15:22 user01
+[root@host ~]# userdel user01
+[root@host ~]# ls -l /home
+drwx------. 3 1000 1000 74 Feb 4 15:22 user01
+[root@host ~]# useradd user02
+[root@host ~]# ls -l /home
+drwx------. 3 user02 user02 74 Feb 4 15:23 user02
+drwx------. 3 user02 user02 74 Feb 4 15:22 user01
+```
+- `user02` now owns files previously owned by `user01`.
+
+**Solutions:**
+- Remove all unowned files when deleting a user.
+- Manually reassign unowned files to a different user:
+  ```bash
+  find / -nouser -o -nogroup
+  ```
+
+### Setting Passwords from the Command Line
+
+- **Set/Change Password:**
+  ```bash
+  passwd username
+  ```
+  - Sets or changes the password for `username`.
+
+**Example:**
+```bash
+[root@host ~]# passwd user01
+Changing password for user user01.
+New password: redhat
+BAD PASSWORD: The password fails the dictionary check - it is based on a dictionary word
+Retype new password: redhat
+passwd: all authentication tokens updated successfully.
+```
+
+- Regular users must choose passwords at least eight characters long and not based on a dictionary word, the username, or the previous password.
+
+### UID Ranges
+
+- **UID 0:** Superuser account, root.
+- **UID 1-200:** System users assigned statically to system processes by Red Hat.
+- **UID 201-999:** System users for processes that do not own files on the file system, assigned dynamically.
+- **UID 1000+:** Regular users.
+
+**Note:**
+- Prior to RHEL 7, UID 1-499 was for system users and UID 500+ for regular users.
+- These ranges can be changed in the `/etc/login.defs` file.
+
+### References
+
+- `useradd(8)`, `usermod(8)`, `userdel(8)` man pages
